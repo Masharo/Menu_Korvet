@@ -18,7 +18,7 @@ public class MainViewModel extends AndroidViewModel {
     public MainViewModel(@NonNull Application application) {
         super(application);
 
-        database = MenuDatabase.getInstance(application);
+        database = MenuDatabase.getInstance(getApplication());
         menus = database.getMenuDao().getAllMenu();
     }
 

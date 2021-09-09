@@ -1,30 +1,34 @@
 package com.example.menukorvet.data;
 
 import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-@Entity(tableName = "menu", primaryKeys = "id")
+@Entity(tableName = "menu")
 public class MenuItem {
 
-    private int id,
-                id_abk,
-                price;
+    @PrimaryKey(autoGenerate = true)
+    private int id;
+    private int id_abk;
+    private int price;
     private String title;
 
-    public int getId() {
-        return id;
+    @Ignore
+    public MenuItem(int id_abk, int price, String title) {
+
+        this.id_abk = id_abk;
+        this.price = price;
+        this.title = title;
     }
 
     public MenuItem(int id, int id_abk, int price, String title) {
+
+        this(id_abk, price, title);
         this.id = id;
-        this.id_abk = id_abk;
-        this.price = price;
-        this.title = title;
     }
 
-    public MenuItem(int id_abk, int price, String title) {
-        this.id_abk = id_abk;
-        this.price = price;
-        this.title = title;
+    public int getId() {
+        return id;
     }
 
     public void setId(int id) {

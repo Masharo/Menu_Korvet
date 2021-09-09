@@ -1,5 +1,6 @@
 package com.example.menukorvet;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +14,7 @@ import com.example.menukorvet.data.MenuItem;
 
 import java.util.List;
 
-public class MenuAdapter extends RecyclerView.Adapter {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
 
     private List<MenuItem> menus;
     private LayoutInflater inflater;
@@ -23,27 +24,27 @@ public class MenuAdapter extends RecyclerView.Adapter {
         this.menus = menus;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setMenus(List<MenuItem> menus) {
         this.menus = menus;
+        this.notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MenuAdapter.MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = View.inflate(parent.getContext(), R.layout.menu_item, parent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item, parent, false);
+//        View view = inflater.inflate(R.layout.menu_item, parent, false);
         return new MenuViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
         MenuItem menu = menus.get(position);
 
-        MenuViewHolder menuHolder = (MenuViewHolder) holder;
-
-        menuHolder.title.setText(menu.getTitle());
-        menuHolder.price.setText(menu.getPrice());
+        holder.title.setText(menu.getTitle());
+        holder.price.setText(String.valueOf(menu.getPrice()));
     }
 
     @Override

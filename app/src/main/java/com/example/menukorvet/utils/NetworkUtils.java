@@ -2,7 +2,6 @@ package com.example.menukorvet.utils;
 
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,7 +10,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,7 +47,7 @@ public class NetworkUtils {
         abstract String get();
     }
 
-    public static URL buildURL(Short sh) {
+    private static URL buildURL(Short sh) {
 
         URL url = null;
 
