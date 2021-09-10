@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MenuKorvet</string>
+    <string name="text_main_abk1">АБК 1</string>
+    <string name="text_main_abk3">АБК 3</string>
 </resources>

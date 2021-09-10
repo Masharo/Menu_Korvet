@@ -1,16 +1,13 @@
 package com.example.menukorvet;
 
-import static androidx.recyclerview.widget.ItemTouchHelper.START;
-import static androidx.recyclerview.widget.ItemTouchHelper.END;
-
 import android.os.Bundle;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.menukorvet.data.MainViewModel;
 import com.example.menukorvet.data.MenuItem;
@@ -27,7 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
     private MainViewModel viewModel;
     private static List<MenuItem> menus;
+    private LiveData<List<MenuItem>> liveData;
     private RecyclerView menuABK1;
+    private SwipeRefreshLayout layout;
     private MenuAdapter adapter;
 
     @Override
@@ -36,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         menuABK1 = findViewById(R.id.recyclerview_main_menuabk1);
+        layout = findViewById(R.id.refreshlayout_main_root);
+
         menus = new ArrayList<>();
         adapter = new MenuAdapter(this, menus);
         viewModel = ViewModelProvider
@@ -44,28 +45,24 @@ public class MainActivity extends AppCompatActivity {
                     .create(MainViewModel.class);
         menuABK1.setAdapter(adapter);
 
-        ItemTouchHelper touchHelper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, START | END) {
-
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView,
-                                  @NonNull RecyclerView.ViewHolder viewHolder,
-                                  @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-
-            }
+        layout.setOnRefreshListener(() -> {
+            downloadAndUpdateData();
+            layout.setRefreshing(false);
         });
 
-//        touchHelper.
-
-        installLiveData();
-        downloadData();
+        liveDataInstallABK(1);
+        downloadAndUpdateData();
     }
 
-    private void downloadData() {
+    private void liveDataInstallABK(int number) {
+        liveData.removeObservers(this);
+
+        viewModel.setABKMenus(number);
+        liveData = viewModel.getMenus();
+        liveData.observe(this, data -> adapter.setMenus(data));
+    }
+
+    private void downloadAndUpdateData() {
         JSONObject json = NetworkUtils.loadData();
         List<MenuItem> menuItems = JSONUtils.jsonToListMenu(json);
 
@@ -75,11 +72,14 @@ public class MainActivity extends AppCompatActivity {
             for (MenuItem menu : menuItems) {
                 viewModel.insertMenu(menu);
             }
+        } else {
+            Toast.makeText(this, "Не удалось обновить данные", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void installLiveData() {
-        LiveData<List<MenuItem>> liveData = viewModel.getMenus();
+        liveData = viewModel.getMenus();
         liveData.observe(this, data -> adapter.setMenus(data));
+
     }
 }

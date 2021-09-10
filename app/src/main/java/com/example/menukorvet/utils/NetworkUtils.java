@@ -3,6 +3,8 @@ package com.example.menukorvet.utils;
 import android.net.Uri;
 import android.os.AsyncTask;
 
+import com.example.menukorvet.Exception.MenuException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,7 +62,7 @@ public class NetworkUtils {
         try {
             url = new URL(uri.toString());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            MenuException.logException(NetworkUtils.class, e);
         }
 
         return url;
@@ -74,7 +76,7 @@ public class NetworkUtils {
         try {
             result = new LoadDataTask().execute(url).get();
         } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
+            MenuException.logException(NetworkUtils.class, e);
         }
 
         return result;
@@ -107,7 +109,7 @@ public class NetworkUtils {
                     result = new JSONObject(builder.toString());
 
                 } catch (IOException | JSONException e) {
-                    e.printStackTrace();
+                    MenuException.logException(this, e);
                 }
                 finally {
                     if (Objects.nonNull(httpURLConnection)) {

@@ -1,5 +1,6 @@
 package com.example.menukorvet.utils;
 
+import com.example.menukorvet.Exception.MenuException;
 import com.example.menukorvet.data.MenuItem;
 
 import org.json.JSONArray;
@@ -8,6 +9,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class JSONUtils {
 
@@ -17,6 +19,10 @@ public class JSONUtils {
                                 KEY_ABK = "abk";
 
     public static List<MenuItem> jsonToListMenu(JSONObject json) {
+
+        if (Objects.isNull(json)) {
+            return null;
+        }
 
         ArrayList<MenuItem> menus = new ArrayList<>();
 
@@ -33,7 +39,7 @@ public class JSONUtils {
                 menus.add(menuItem);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            MenuException.logException(JSONUtils.class, e);
         }
 
         return menus;

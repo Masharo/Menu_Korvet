@@ -26,6 +26,14 @@ public class MainViewModel extends AndroidViewModel {
         return menus;
     }
 
+    public void setABKMenus(int numberABK) {
+        menus = database.getMenuDao().getAllMenuABK(numberABK);
+    }
+
+    public void setABKMenus() {
+        menus = database.getMenuDao().getAllMenu();
+    }
+
     public void insertMenu(MenuItem menu) {
         new InsertMenuTask().execute(menu);
     }
