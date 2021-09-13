@@ -1,8 +1,11 @@
 package com.example.menukorvet;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,7 +28,12 @@ public class MainActivity extends AppCompatActivity {
     private MainViewModel viewModel;
     private static List<MenuItem> menus;
     private LiveData<List<MenuItem>> liveData;
-    private RecyclerView menuABK1;
+    private String titleMenu;
+    private RecyclerView menuABK;
+    private TextView notMenu;
+    private ActionBar actionBar;
+    private TextView buttonABK;
+    private ABKController abk;
     private SwipeRefreshLayout layout;
     private MenuAdapter adapter;
 
@@ -34,8 +42,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        menuABK1 = findViewById(R.id.recyclerview_main_menuabk1);
+        menuABK = findViewById(R.id.recyclerview_main_menuabk);
         layout = findViewById(R.id.refreshlayout_main_root);
+        buttonABK = findViewById(R.id.textview_main_buttonabk);
+        notMenu = findViewById(R.id.textview_main_notmenu);
+        actionBar = getSupportActionBar();
 
         menus = new ArrayList<>();
         adapter = new MenuAdapter(this, menus);
@@ -43,23 +54,37 @@ public class MainActivity extends AppCompatActivity {
                     .AndroidViewModelFactory
                     .getInstance(getApplication())
                     .create(MainViewModel.class);
-        menuABK1.setAdapter(adapter);
+        menuABK.setAdapter(adapter);
+        abk = ABKController.getInstance();
+        titleMenu = getString(R.string.text_main_titlemenu);
 
         layout.setOnRefreshListener(() -> {
             downloadAndUpdateData();
             layout.setRefreshing(false);
         });
 
-        liveDataInstallABK(1);
         downloadAndUpdateData();
+        liveDataInstallABK();
     }
 
-    private void liveDataInstallABK(int number) {
-        liveData.removeObservers(this);
+    private void liveDataInstallABK() {
+        abk.abkNextInstance();
 
-        viewModel.setABKMenus(number);
+        String titleABK = getString(abk.getABK().getName());
+        buttonABK.setText(abk.getNextABK().getName());
+        actionBar.setTitle(String.format(titleMenu, titleABK));
+
+        viewModel.setABKMenus(abk.getABK().getId());
         liveData = viewModel.getMenus();
-        liveData.observe(this, data -> adapter.setMenus(data));
+        liveData.observe(this, data -> {
+            adapter.setMenus(data);
+
+            if (data.isEmpty()) {
+                notMenu.setVisibility(View.VISIBLE);
+            } else {
+                notMenu.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     private void downloadAndUpdateData() {
@@ -73,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
                 viewModel.insertMenu(menu);
             }
         } else {
-            Toast.makeText(this, "Не удалось обновить данные", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.text_main_errornotdata, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -81,5 +106,10 @@ public class MainActivity extends AppCompatActivity {
         liveData = viewModel.getMenus();
         liveData.observe(this, data -> adapter.setMenus(data));
 
+    }
+
+    public void onClickReselectABK(View view) {
+        liveData.removeObservers(this);
+        liveDataInstallABK();
     }
 }
