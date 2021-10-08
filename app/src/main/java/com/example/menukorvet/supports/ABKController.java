@@ -1,4 +1,6 @@
-package com.example.menukorvet;
+package com.example.menukorvet.supports;
+
+import com.example.menukorvet.R;
 
 import java.util.Objects;
 
@@ -47,28 +49,28 @@ public class ABKController {
     public enum NumberABK {
         ABK1 {
             @Override
-            int getId() {
+            public int getId() {
                 return 1;
             }
 
             @Override
-            int getName() {
+            public int getName() {
                 return R.string.text_main_abk1;
             }
         },
         ABK3 {
             @Override
-            int getId() {
+            public int getId() {
                 return 2;
             }
 
             @Override
-            int getName() {
+            public int getName() {
                 return R.string.text_main_abk3;
             }
         };
 
-        abstract int getId();
-        abstract int getName();
+        public abstract int getId();
+        public abstract int getName();
     }
 }

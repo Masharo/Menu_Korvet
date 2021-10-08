@@ -1,4 +1,4 @@
-package com.example.menukorvet;
+package com.example.menukorvet.screens.listMenu;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,17 +10,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.menukorvet.data.MenuItem;
+import com.example.menukorvet.R;
+import com.example.menukorvet.pojo.Dish;
 
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
 
-    private List<MenuItem> menus;
+    private List<Dish> menus;
     private LayoutInflater inflater;
     private String patternPrice;
 
-    public MenuAdapter(Context context, List<MenuItem> menus) {
+    public MenuAdapter(Context context, List<Dish> menus) {
         this.inflater = LayoutInflater.from(context);
         this.menus = menus;
 
@@ -28,7 +29,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setMenus(List<MenuItem> menus) {
+    public void setMenus(List<Dish> menus) {
         this.menus = menus;
         this.notifyDataSetChanged();
     }
@@ -43,10 +44,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
-        MenuItem menu = menus.get(position);
+        Dish menu = menus.get(position);
 
-        holder.title.setText(menu.getTitle());
-        holder.price.setText(String.format(patternPrice, menu.getPrice()));
+        holder.title.setText(menu.getName());
+        holder.price.setText(String.format(patternPrice, menu.getZena()));
     }
 
     @Override

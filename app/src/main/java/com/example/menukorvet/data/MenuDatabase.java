@@ -6,9 +6,11 @@ import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
+import com.example.menukorvet.pojo.Dish;
+
 import java.util.Objects;
 
-@Database(entities = {MenuItem.class}, version = 1, exportSchema = false)
+@Database(entities = {Dish.class}, version = 1, exportSchema = false)
 public abstract class MenuDatabase extends RoomDatabase {
 
     public static final String NAME = "menu_db";

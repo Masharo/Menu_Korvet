@@ -5,20 +5,22 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
 
+import com.example.menukorvet.pojo.Dish;
+
 import java.util.List;
 
 @Dao
 public interface MenuDao {
 
-    @Query("SELECT * FROM menu")
-    LiveData<List<MenuItem>> getAllMenu();
+    @Query("SELECT * FROM dish")
+    LiveData<List<Dish>> getAllMenu();
 
-    @Query("SELECT * FROM menu WHERE id_abk = :numberABK")
-    LiveData<List<MenuItem>> getAllMenuABK(int numberABK);
+    @Query("SELECT * FROM dish WHERE abk = :numberABK")
+    LiveData<List<Dish>> getAllMenuABK(int numberABK);
 
-    @Query("DELETE FROM menu")
+    @Query("DELETE FROM dish")
     void clearAllMenu();
 
     @Insert
-    void insertMenu(MenuItem menu);
+    void insertMenu(List<Dish> menu);
 }
