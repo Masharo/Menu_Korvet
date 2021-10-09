@@ -64,8 +64,6 @@ public class MainActivity extends AppCompatActivity {
             layout.setRefreshing(false);
         });
 
-        liveDataInstallABK();
-
         viewModel.getIsRequestDeleteAllMenu().observe(MainActivity.this, isDeleteOperation ->
                 isRequestDeleteAllMenu = isDeleteOperation
         );
@@ -81,6 +79,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
         viewModel.loadData();
+
+        viewModel.getMenus().observe(this, data ->
+                adapter.setMenus(data)
+        );
+
+        liveDataInstallABK();
     }
 
     private void listIsEmpty(List<Dish> menu) {
@@ -103,16 +107,10 @@ public class MainActivity extends AppCompatActivity {
         buttonABK.setText(abk.getNextABK().getName());
         actionBar.setTitle(String.format(titleMenu, titleABK));
 
-        liveData = viewModel.getMenus();
-        liveData.observe(this, data ->
-            adapter.setMenus(data)
-        );
-
         viewModel.setABKMenus(abk.getABK().getId());
     }
 
     public void onClickReselectABK(View view) {
-        liveData.removeObservers(this);
         liveDataInstallABK();
     }
 }
