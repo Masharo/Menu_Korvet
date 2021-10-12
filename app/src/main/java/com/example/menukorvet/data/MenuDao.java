@@ -1,6 +1,5 @@
 package com.example.menukorvet.data;
 
-import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -13,10 +12,10 @@ import java.util.List;
 public interface MenuDao {
 
     @Query("SELECT * FROM dish")
-    LiveData<List<Dish>> getAllMenu();
+    List<Dish> getAllMenu();
 
     @Query("SELECT * FROM dish WHERE abk = :numberABK")
-    LiveData<List<Dish>> getAllMenuABK(int numberABK);
+    List<Dish> getAllMenuABK(int numberABK);
 
     @Query("DELETE FROM dish")
     void clearAllMenu();

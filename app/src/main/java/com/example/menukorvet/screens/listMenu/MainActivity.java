@@ -7,15 +7,13 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.menukorvet.supports.ABKController;
 import com.example.menukorvet.R;
 import com.example.menukorvet.pojo.Dish;
+import com.example.menukorvet.supports.ABKController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isRequestDeleteAllMenu;
     private MainViewModel viewModel;
     private static List<Dish> menus;
-    private LiveData<List<Dish>> liveData;
     private String titleMenu;
     private RecyclerView menuABK;
     private TextView notMenu;
@@ -36,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private ABKController abk;
     private SwipeRefreshLayout layout;
     private MenuAdapter adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +58,7 @@ public class MainActivity extends AppCompatActivity {
         titleMenu = getString(R.string.text_main_titlemenu);
 
         layout.setOnRefreshListener(() -> {
-            viewModel.loadData();
-            layout.setRefreshing(false);
+            viewModel.loadData(abk.getABK());
         });
 
         viewModel.getIsRequestDeleteAllMenu().observe(MainActivity.this, isDeleteOperation ->
@@ -71,27 +68,24 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getMenus().observe(MainActivity.this, menu -> {
             adapter.setMenus(menu);
             listIsEmpty(menu);
+            layout.setRefreshing(false);
         });
 
         viewModel.getErrors().observe(MainActivity.this, error -> {
             Toast.makeText(MainActivity.this, R.string.text_main_errornotdata, Toast.LENGTH_SHORT).show();
             listIsEmpty(null);
+            layout.setRefreshing(false);
         });
 
-        viewModel.loadData();
-
-        viewModel.getMenus().observe(this, data ->
-                adapter.setMenus(data)
-        );
-
-        liveDataInstallABK();
+        viewModel.loadData(abk.getABK());
+        viewInstallABK();
     }
 
     private void listIsEmpty(List<Dish> menu) {
 
         int length = adapter.getItemCount();
 
-        if ((Objects.isNull(menu) && length == 0) || (menu.size() == 0 && !isRequestDeleteAllMenu)) {
+        if ((Objects.isNull(menu) && length == 0) || (!isRequestDeleteAllMenu && Objects.nonNull(menu) && menu.size() == 0)) {
             notMenu.setVisibility(View.VISIBLE);
         } else {
             notMenu.setVisibility(View.INVISIBLE);
@@ -100,17 +94,15 @@ public class MainActivity extends AppCompatActivity {
         isRequestDeleteAllMenu = false;
     }
 
-    private void liveDataInstallABK() {
-        abk.abkNextInstance();
-
+    private void viewInstallABK() {
         String titleABK = getString(abk.getABK().getName());
         buttonABK.setText(abk.getNextABK().getName());
         actionBar.setTitle(String.format(titleMenu, titleABK));
-
-        viewModel.setABKMenus(abk.getABK().getId());
     }
 
     public void onClickReselectABK(View view) {
-        liveDataInstallABK();
+        abk.abkNextInstance();
+        viewInstallABK();
+        viewModel.setABKMenus(abk.getABK());
     }
 }

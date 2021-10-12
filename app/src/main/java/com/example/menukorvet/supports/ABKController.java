@@ -40,7 +40,7 @@ public class ABKController {
     public static ABKController getInstance() {
         if (Objects.isNull(abkController)) {
             abkController = new ABKController();
-            abkController.abkIndex = -1;
+            abkController.abkIndex = 0;
         }
 
         return abkController;
