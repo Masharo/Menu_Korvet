@@ -1,9 +1,9 @@
 <resources>
-    <string name="app_name">MenuKorvet</string>
-    <string name="text_main_abk1">АБК 1</string>
-    <string name="text_main_abk3">АБК 3</string>
-    <string name="text_main_errornotdata">Не удалось обновить данные</string>
-    <string name="text_main_titlemenu">Меню столовой :: %s</string>
-    <string name="text_main_errornotmenu">К сожалению список пуст</string>
-    <string name="text_price_patternprice">Цена: %2d\tр</string>
+    <string name="app_name">Menu Korvet</string>
+    <string name="text_main_abk1">ABK 1</string>
+    <string name="text_main_abk3">ABK 3</string>
+    <string name="text_main_errornotdata">Failed to update data</string>
+    <string name="text_main_titlemenu">Сanteen menu :: %s</string>
+    <string name="text_main_errornotmenu">Sorry, the list is empty</string>
+    <string name="text_price_patternprice">Price: %2d\tр</string>
 </resources>

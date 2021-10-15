@@ -1,5 +1,6 @@
 package com.example.menukorvet.api;
 
+import com.example.menukorvet.Exception.MenuException;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.Objects;
@@ -27,9 +28,11 @@ public class ApiFactory {
         OkHttpClient okHttpClient = new OkHttpClient.Builder()
                 .authenticator((route, response) -> {
                     Request request = response.request();
-                    if (request.header(KEY_AUTHORIZATION) != null)
+                    if (request.header(KEY_AUTHORIZATION) != null) {
                         // Логин и пароль неверны
+                        MenuException.logException(ApiFactory.this, new Exception("Error authentication"));
                         return null;
+                    }
                     return request.newBuilder()
                             .header(KEY_AUTHORIZATION, Credentials.basic(LOGIN, PASSWORD))
                             .build();

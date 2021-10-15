@@ -51,6 +51,4 @@ public class Menu {
     public void setNow(String now) {
         this.now = now;
     }
-
-
 }

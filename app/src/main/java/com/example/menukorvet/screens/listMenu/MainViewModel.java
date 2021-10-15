@@ -27,9 +27,9 @@ public class MainViewModel extends AndroidViewModel {
     //чтобы по середине операции не считалось что БД пуста
     private static MutableLiveData<Boolean> isRequestDeleteAllMenu;
     private static MenuDatabase database;
-    private MutableLiveData<List<Dish>> menus;
-    private MutableLiveData<Throwable> errors;
-    private CompositeDisposable compositeDisposable;
+    private final MutableLiveData<List<Dish>> menus;
+    private final MutableLiveData<Throwable> errors;
+    private final CompositeDisposable compositeDisposable;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
