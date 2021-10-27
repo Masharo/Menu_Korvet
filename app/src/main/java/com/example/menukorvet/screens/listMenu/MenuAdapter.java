@@ -34,6 +34,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         this.notifyDataSetChanged();
     }
 
+    public List<Dish> getMenus() {
+        return menus;
+    }
+
     @NonNull
     @Override
     public MenuAdapter.MenuViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

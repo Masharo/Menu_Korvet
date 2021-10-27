@@ -1,6 +1,6 @@
 package com.example.menukorvet.api;
 
-import com.example.menukorvet.Exception.MenuException;
+import com.example.menukorvet.exception.MenuException;
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 
 import java.util.Objects;

@@ -11,6 +11,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.menukorvet.api.ApiFactory;
 import com.example.menukorvet.data.MenuDatabase;
 import com.example.menukorvet.pojo.Dish;
+import com.example.menukorvet.pojo.FavoriteDish;
 import com.example.menukorvet.supports.ABKController;
 
 import java.util.List;
@@ -89,6 +90,15 @@ public class MainViewModel extends AndroidViewModel {
         new InsertMenuTask().execute(menu);
     }
 
+    public void insertFavorite(FavoriteDish favoriteDish) {
+        new InsertFavoriteListTask().execute(favoriteDish);
+    }
+
+    public void insertFavorite(Dish dish) {
+        FavoriteDish favoriteDish = new FavoriteDish(dish.getName());
+        new InsertFavoriteListTask().execute(favoriteDish);
+    }
+
     public void deleteAllMenu() {
         new DeleteAllMenuTask().execute();
     }
@@ -150,6 +160,18 @@ public class MainViewModel extends AndroidViewModel {
             }
 
             return dishes;
+        }
+    }
+
+    private static class InsertFavoriteListTask extends AsyncTask<FavoriteDish, Void, Void> {
+
+        @Override
+        protected Void doInBackground(FavoriteDish... favoriteDishes) {
+            if (Objects.nonNull(favoriteDishes) && favoriteDishes.length > 0) {
+                database.getMenuDao().insertFavorite(favoriteDishes[0]);
+            }
+
+            return null;
         }
     }
 

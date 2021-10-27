@@ -5,6 +5,8 @@ import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.example.menukorvet.pojo.Dish;
+import com.example.menukorvet.pojo.DishAndFavorite;
+import com.example.menukorvet.pojo.FavoriteDish;
 
 import java.util.List;
 
@@ -22,4 +24,10 @@ public interface MenuDao {
 
     @Insert
     void insertMenu(List<Dish> menu);
+
+    @Insert
+    void insertFavorite(FavoriteDish favoriteDish);
+
+    @Query("SELECT * FROM dish")
+    List<DishAndFavorite> getDishAndFavorite();
 }

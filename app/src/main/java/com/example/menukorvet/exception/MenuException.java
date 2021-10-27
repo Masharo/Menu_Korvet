@@ -1,4 +1,4 @@
-package com.example.menukorvet.Exception;
+package com.example.menukorvet.exception;
 
 import android.util.Log;
 

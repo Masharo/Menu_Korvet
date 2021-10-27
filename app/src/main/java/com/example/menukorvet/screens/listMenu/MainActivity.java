@@ -1,13 +1,17 @@
 package com.example.menukorvet.screens.listMenu;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -31,9 +35,9 @@ public class MainActivity extends AppCompatActivity {
     private ActionBar actionBar;
     private TextView buttonABK;
     private ABKController abk;
-    private SwipeRefreshLayout layout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private MenuAdapter adapter;
-
+    private boolean lockSwipeRefresherLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,10 +45,11 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         menuABK = findViewById(R.id.recyclerview_main_menuabk);
-        layout = findViewById(R.id.refreshlayout_main_root);
+        swipeRefreshLayout = findViewById(R.id.refreshlayout_main_root);
         buttonABK = findViewById(R.id.textview_main_buttonabk);
         notMenu = findViewById(R.id.textview_main_notmenu);
         actionBar = getSupportActionBar();
+        lockSwipeRefresherLayout = true;
 
         isRequestDeleteAllMenu = false;
         menus = new ArrayList<>();
@@ -57,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         abk = ABKController.getInstance();
         titleMenu = getString(R.string.text_main_titlemenu);
 
-        layout.setOnRefreshListener(() -> {
+        swipeRefreshLayout.setOnRefreshListener(() -> {
             viewModel.loadData(abk.getABK());
         });
 
@@ -68,17 +73,41 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getMenus().observe(MainActivity.this, menu -> {
             adapter.setMenus(menu);
             listIsEmpty(menu);
-            layout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         viewModel.getErrors().observe(MainActivity.this, error -> {
             Toast.makeText(MainActivity.this, R.string.text_main_errornotdata, Toast.LENGTH_SHORT).show();
             listIsEmpty(null);
-            layout.setRefreshing(false);
+            swipeRefreshLayout.setRefreshing(false);
         });
 
         viewModel.loadData(abk.getABK());
         viewInstallABK();
+
+        new ItemTouchHelper(
+            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START | ItemTouchHelper.END) {
+                @Override
+                public boolean onMove(@NonNull RecyclerView recyclerView,
+                                      @NonNull RecyclerView.ViewHolder viewHolder,
+                                      @NonNull RecyclerView.ViewHolder target) {
+                    return false;
+                }
+
+                @Override
+                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                    viewModel.insertFavorite(adapter.getMenus().get(viewHolder.getAdapterPosition()));
+                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
+                }
+
+                @Override
+                public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
+                    super.onSelectedChanged(viewHolder, actionState);
+                    lockSwipeRefresherLayout = !lockSwipeRefresherLayout;
+                    swipeRefreshLayout.setEnabled(lockSwipeRefresherLayout);
+                }
+            }
+        ).attachToRecyclerView(menuABK);
     }
 
     private void listIsEmpty(List<Dish> menu) {
