@@ -2,18 +2,23 @@ package com.example.menukorvet.screens.listMenu;
 
 import android.app.Application;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.loader.content.AsyncTaskLoader;
 
 import com.example.menukorvet.api.ApiFactory;
 import com.example.menukorvet.data.MenuDatabase;
+import com.example.menukorvet.exception.MenuException;
 import com.example.menukorvet.pojo.Dish;
+import com.example.menukorvet.pojo.DishAndFavorite;
 import com.example.menukorvet.pojo.FavoriteDish;
 import com.example.menukorvet.supports.ABKController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
@@ -28,7 +33,7 @@ public class MainViewModel extends AndroidViewModel {
     //чтобы по середине операции не считалось что БД пуста
     private static MutableLiveData<Boolean> isRequestDeleteAllMenu;
     private static MenuDatabase database;
-    private final MutableLiveData<List<Dish>> menus;
+    private final MutableLiveData<List<DishAndFavorite>> menus;
     private final MutableLiveData<Throwable> errors;
     private final CompositeDisposable compositeDisposable;
 
@@ -46,7 +51,7 @@ public class MainViewModel extends AndroidViewModel {
         return errors;
     }
 
-    public LiveData<List<Dish>> getMenus() {
+    public LiveData<List<DishAndFavorite>> getMenus() {
         return menus;
     }
 
@@ -55,7 +60,7 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     public void setABKMenus(ABKController.NumberABK numberABK) {
-        menus.setValue(getAllMenusABK(numberABK));
+        menus.setValue(getDishAndFavorite(numberABK));
     }
 
     public List<Dish> getAllMenus() {
@@ -82,10 +87,6 @@ public class MainViewModel extends AndroidViewModel {
         return dishes;
     }
 
-    public void setABKMenus() {
-        menus.setValue(getAllMenus());
-    }
-
     public void insertMenu(List<Dish> menu) {
         new InsertMenuTask().execute(menu);
     }
@@ -99,8 +100,29 @@ public class MainViewModel extends AndroidViewModel {
         new InsertFavoriteListTask().execute(favoriteDish);
     }
 
+    public void insertFavorite(DishAndFavorite dish) {
+        FavoriteDish favoriteDish = new FavoriteDish(dish.getName());
+        new InsertFavoriteListTask().execute(favoriteDish);
+    }
+
+    public void deleteFavorite(DishAndFavorite dish) {
+        new DeleteFavoriteDishTask().execute(dish.getFavorites().get(0));
+    }
+
     public void deleteAllMenu() {
         new DeleteAllMenuTask().execute();
+    }
+
+    public List<DishAndFavorite> getDishAndFavorite(ABKController.NumberABK numberABK) {
+        try {
+
+            return new GetDishAndFavorite().execute(numberABK).get();
+
+        } catch (ExecutionException | InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return new ArrayList<>();
     }
 
     @Override
@@ -149,6 +171,19 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    private static class DeleteFavoriteDishTask extends AsyncTask<FavoriteDish, Void, Void> {
+
+        @Override
+        protected synchronized Void doInBackground(FavoriteDish... favoriteDish) {
+
+            if (Objects.nonNull(favoriteDish) && favoriteDish.length > 0) {
+                database.getMenuDao().deleteFavorite(favoriteDish[0]);
+            }
+
+            return null;
+        }
+    }
+
     private static class GetAllMenuABKTask extends AsyncTask<ABKController.NumberABK, Void, List<Dish>> {
 
         @Override
@@ -163,12 +198,30 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    private static class GetDishAndFavorite extends AsyncTask<ABKController.NumberABK, Void, List<DishAndFavorite>> {
+
+        @Override
+        protected List<DishAndFavorite> doInBackground(ABKController.NumberABK... numberABKS) {
+
+            if (Objects.nonNull(numberABKS) && numberABKS.length > 0) {
+                return database.getMenuDao().getDishAndFavorite(numberABKS[0].getId());
+            }
+
+            return new ArrayList<>();
+        }
+    }
+
     private static class InsertFavoriteListTask extends AsyncTask<FavoriteDish, Void, Void> {
 
         @Override
         protected Void doInBackground(FavoriteDish... favoriteDishes) {
             if (Objects.nonNull(favoriteDishes) && favoriteDishes.length > 0) {
-                database.getMenuDao().insertFavorite(favoriteDishes[0]);
+                try {
+                    database.getMenuDao().insertFavorite(favoriteDishes[0]);
+                } catch (Exception ex) {
+                    MenuException.logException(MainViewModel.class, ex);
+                }
+
             }
 
             return null;

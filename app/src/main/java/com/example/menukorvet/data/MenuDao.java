@@ -1,6 +1,7 @@
 package com.example.menukorvet.data;
 
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 
@@ -28,6 +29,15 @@ public interface MenuDao {
     @Insert
     void insertFavorite(FavoriteDish favoriteDish);
 
-    @Query("SELECT * FROM dish")
-    List<DishAndFavorite> getDishAndFavorite();
+    @Delete
+    void deleteFavorite(FavoriteDish favoriteDish);
+
+//    TODO
+//    @Query("SELECT * " +
+//            "FROM dish, favorite_dish " +
+//            "WHERE dish.abk = :numberABK " +
+//            "ORDER BY nameFavorite")
+
+    @Query("SELECT * FROM dish WHERE dish.abk = :numberABK")
+    List<DishAndFavorite> getDishAndFavorite(int numberABK);
 }

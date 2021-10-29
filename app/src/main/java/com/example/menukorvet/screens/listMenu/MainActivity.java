@@ -1,10 +1,12 @@
 package com.example.menukorvet.screens.listMenu;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static androidx.recyclerview.widget.ItemTouchHelper.START;
+import static androidx.recyclerview.widget.ItemTouchHelper.END;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,10 +18,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.menukorvet.R;
-import com.example.menukorvet.pojo.Dish;
+import com.example.menukorvet.pojo.DishAndFavorite;
+import com.example.menukorvet.pojo.FavoriteDish;
 import com.example.menukorvet.supports.ABKController;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,7 +30,6 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean isRequestDeleteAllMenu;
     private MainViewModel viewModel;
-    private static List<Dish> menus;
     private String titleMenu;
     private RecyclerView menuABK;
     private TextView notMenu;
@@ -52,8 +53,7 @@ public class MainActivity extends AppCompatActivity {
         lockSwipeRefresherLayout = true;
 
         isRequestDeleteAllMenu = false;
-        menus = new ArrayList<>();
-        adapter = new MenuAdapter(this, menus);
+        adapter = new MenuAdapter(this);
         viewModel = ViewModelProvider
                     .AndroidViewModelFactory
                     .getInstance(getApplication())
@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         viewInstallABK();
 
         new ItemTouchHelper(
-            new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START | ItemTouchHelper.END) {
+            new ItemTouchHelper.SimpleCallback(0, START | END) {
                 @Override
                 public boolean onMove(@NonNull RecyclerView recyclerView,
                                       @NonNull RecyclerView.ViewHolder viewHolder,
@@ -96,7 +96,17 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                    viewModel.insertFavorite(adapter.getMenus().get(viewHolder.getAdapterPosition()));
+                    DishAndFavorite dishAndFavorite = adapter.getMenus().get(viewHolder.getAdapterPosition());
+                    int size = dishAndFavorite.getFavorites().size();
+
+                    if (direction == START && size == 0) {
+                        viewModel.insertFavorite(dishAndFavorite);
+                        dishAndFavorite.getFavorites().add(new FavoriteDish(dishAndFavorite.getName()));
+                    } else if (direction == END && size > 0) {
+                        viewModel.deleteFavorite(dishAndFavorite);
+                        dishAndFavorite.getFavorites().remove(0);
+                    }
+
                     adapter.notifyItemChanged(viewHolder.getAdapterPosition());
                 }
 
@@ -110,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         ).attachToRecyclerView(menuABK);
     }
 
-    private void listIsEmpty(List<Dish> menu) {
+    private void listIsEmpty(List<DishAndFavorite> menu) {
 
         int length = adapter.getItemCount();
 

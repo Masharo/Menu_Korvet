@@ -11,30 +11,37 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menukorvet.R;
-import com.example.menukorvet.pojo.Dish;
+import com.example.menukorvet.pojo.DishAndFavorite;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder> {
 
-    private List<Dish> menus;
+    private List<DishAndFavorite> menus;
     private LayoutInflater inflater;
     private String patternPrice;
+    private Context context;
 
-    public MenuAdapter(Context context, List<Dish> menus) {
+    public MenuAdapter(Context context, List<DishAndFavorite> menus) {
         this.inflater = LayoutInflater.from(context);
         this.menus = menus;
+        this.context = context;
 
         patternPrice = context.getString(R.string.text_price_patternprice);
     }
 
+    public MenuAdapter(Context context) {
+        this(context, new ArrayList<>());
+    }
+
     @SuppressLint("NotifyDataSetChanged")
-    public void setMenus(List<Dish> menus) {
+    public void setMenus(List<DishAndFavorite> menus) {
         this.menus = menus;
         this.notifyDataSetChanged();
     }
 
-    public List<Dish> getMenus() {
+    public List<DishAndFavorite> getMenus() {
         return menus;
     }
 
@@ -48,10 +55,16 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MenuViewHolder holder, int position) {
-        Dish menu = menus.get(position);
+        DishAndFavorite menu = menus.get(position);
 
         holder.title.setText(menu.getName());
         holder.price.setText(String.format(patternPrice, menu.getZena()));
+
+        if (menu.isFavorites()) {
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.good_green));
+        } else {
+            holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+        }
     }
 
     @Override

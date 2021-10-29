@@ -1,5 +1,6 @@
 package com.example.menukorvet.pojo;
 
+import androidx.room.Ignore;
 import androidx.room.Relation;
 
 import java.util.List;
@@ -20,6 +21,10 @@ public class DishAndFavorite {
 
     public void setFavorites(List<FavoriteDish> favorites) {
         this.favorites = favorites;
+    }
+
+    public boolean isFavorites() {
+        return getFavorites().size() > 0;
     }
 
     public int getId() {
