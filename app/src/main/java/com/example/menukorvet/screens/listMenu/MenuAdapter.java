@@ -62,8 +62,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
 
         if (menu.isFavorites()) {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.good_green));
+            holder.status = Status.GOOD;
         } else {
             holder.itemView.setBackgroundColor(context.getResources().getColor(R.color.white));
+            holder.status = Status.NEUTRAL;
         }
     }
 
@@ -72,16 +74,27 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuViewHolder
         return menus.size();
     }
 
+    public enum Status {
+        GOOD,
+        NEUTRAL
+    }
+
     class MenuViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title,
                          price;
+
+        private Status status;
 
         public MenuViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.textview_menuitem_title);
             price = itemView.findViewById(R.id.textview_menuitem_price);
+        }
+
+        public Status getStatus() {
+            return status;
         }
     }
 }

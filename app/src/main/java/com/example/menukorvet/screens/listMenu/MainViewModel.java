@@ -2,13 +2,11 @@ package com.example.menukorvet.screens.listMenu;
 
 import android.app.Application;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.loader.content.AsyncTaskLoader;
 
 import com.example.menukorvet.api.ApiFactory;
 import com.example.menukorvet.data.MenuDatabase;
