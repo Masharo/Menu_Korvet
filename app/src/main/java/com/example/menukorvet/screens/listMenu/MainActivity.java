@@ -125,40 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setEnabled(lockSwipeRefresherLayout);
             }
         }).attachToRecyclerView(menuABK);
-
-//        new ItemTouchHelper(
-//            new ItemTouchHelper.SimpleCallback(0, START | END) {
-//                @Override
-//                public boolean onMove(@NonNull RecyclerView recyclerView,
-//                                      @NonNull RecyclerView.ViewHolder viewHolder,
-//                                      @NonNull RecyclerView.ViewHolder target) {
-//                    return false;
-//                }
-//
-//                @Override
-//                public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                    DishAndFavorite dishAndFavorite = adapter.getMenus().get(viewHolder.getAdapterPosition());
-//                    int size = dishAndFavorite.getFavorites().size();
-//
-//                    if (direction == START && size == 0) {
-//                        viewModel.insertFavorite(dishAndFavorite);
-//                        dishAndFavorite.getFavorites().add(new FavoriteDish(dishAndFavorite.getName()));
-//                    } else if (direction == END && size > 0) {
-//                        viewModel.deleteFavorite(dishAndFavorite);
-//                        dishAndFavorite.getFavorites().remove(0);
-//                    }
-//
-//                    adapter.notifyItemChanged(viewHolder.getAdapterPosition());
-//                }
-//
-//                @Override
-//                public void onSelectedChanged(@Nullable RecyclerView.ViewHolder viewHolder, int actionState) {
-//                    super.onSelectedChanged(viewHolder, actionState);
-//                    lockSwipeRefresherLayout = !lockSwipeRefresherLayout;
-//                    swipeRefreshLayout.setEnabled(lockSwipeRefresherLayout);
-//                }
-//            }
-//        ).attachToRecyclerView(menuABK);
     }
 
     private void listIsEmpty(List<DishAndFavorite> menu) {
