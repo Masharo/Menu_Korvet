@@ -10,15 +10,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menukorvet.R;
 import com.example.menukorvet.pojo.DishAndFavorite;
+import com.example.menukorvet.pojo.FavoriteAndPrice;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 
-    private List<DishAndFavorite> favorites;
+    private List<FavoriteAndPrice> favorites;
 
-    public FavoriteAdapter(List<DishAndFavorite> favorites) {
+    public FavoriteAdapter(List<FavoriteAndPrice> favorites) {
+        this.favorites = favorites;
+    }
+
+    public FavoriteAdapter() {
+        this(new ArrayList<>());
+    }
+
+    public void setFavorites(List<FavoriteAndPrice> favorites) {
         this.favorites = favorites;
     }
 
@@ -31,10 +41,10 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteViewHolder holder, int position) {
-        DishAndFavorite dishAndFavorite = favorites.get(position);
+        FavoriteAndPrice favoriteAndPrice = favorites.get(position);
 
-        holder.title.setText(dishAndFavorite.getName());
-        holder.price.setText(dishAndFavorite.getZena());
+        holder.title.setText(favoriteAndPrice.getFavorites().get(0).getName());
+        holder.price.setText(favoriteAndPrice.getFavorites().get(0).getZena());
     }
 
     @Override

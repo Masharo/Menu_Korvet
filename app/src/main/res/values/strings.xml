@@ -6,4 +6,6 @@
     <string name="text_main_titlemenu">Сanteen menu :: %s</string>
     <string name="text_main_errornotmenu">Sorry, the list is empty</string>
     <string name="text_price_patternprice">Price: %2d\tр</string>
+    <string name="text_menu_itemnamemenu">Menu</string>
+    <string name="text_menu_itemnamefavorite">Favorite</string>
 </resources>

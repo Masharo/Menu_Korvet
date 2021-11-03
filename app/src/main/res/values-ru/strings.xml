@@ -7,4 +7,6 @@
     <string name="text_main_titlemenu">Меню столовой :: %s</string>
     <string name="text_main_errornotmenu">К сожалению список пуст</string>
     <string name="text_price_patternprice">Цена: %2d</string>
+    <string name="text_menu_itemnamemenu">Меню</string>
+    <string name="text_menu_itemnamefavorite">Избранное</string>
 </resources>

@@ -7,6 +7,7 @@ import androidx.room.Query;
 
 import com.example.menukorvet.pojo.Dish;
 import com.example.menukorvet.pojo.DishAndFavorite;
+import com.example.menukorvet.pojo.FavoriteAndPrice;
 import com.example.menukorvet.pojo.FavoriteDish;
 
 import java.util.List;
@@ -31,6 +32,9 @@ public interface MenuDao {
 
     @Delete
     void deleteFavorite(FavoriteDish favoriteDish);
+
+    @Query("SELECT * FROM favorite_dish")
+    List<FavoriteAndPrice> getFavorites();
 
 //    TODO
 //    @Query("SELECT * " +

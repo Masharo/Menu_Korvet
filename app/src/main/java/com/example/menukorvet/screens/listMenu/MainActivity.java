@@ -1,6 +1,10 @@
 package com.example.menukorvet.screens.listMenu;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +24,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.menukorvet.R;
 import com.example.menukorvet.pojo.DishAndFavorite;
 import com.example.menukorvet.pojo.FavoriteDish;
+import com.example.menukorvet.screens.listFavorite.FavoriteActivity;
 import com.example.menukorvet.supports.ABKController;
 
 import java.util.List;
@@ -125,6 +130,25 @@ public class MainActivity extends AppCompatActivity {
                 swipeRefreshLayout.setEnabled(lockSwipeRefresherLayout);
             }
         }).attachToRecyclerView(menuABK);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        if (item.getItemId() == R.id.item_menu_favorite) {
+            Intent intent = new Intent(MainActivity.this, FavoriteActivity.class);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     private void listIsEmpty(List<DishAndFavorite> menu) {
