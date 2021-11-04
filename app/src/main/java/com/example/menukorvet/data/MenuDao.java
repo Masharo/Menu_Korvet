@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Transaction;
 
 import com.example.menukorvet.pojo.Dish;
 import com.example.menukorvet.pojo.DishAndFavorite;
@@ -33,6 +34,7 @@ public interface MenuDao {
     @Delete
     void deleteFavorite(FavoriteDish favoriteDish);
 
+    @Transaction
     @Query("SELECT * FROM favorite_dish")
     List<FavoriteAndPrice> getFavorites();
 
@@ -42,6 +44,7 @@ public interface MenuDao {
 //            "WHERE dish.abk = :numberABK " +
 //            "ORDER BY nameFavorite")
 
+    @Transaction
     @Query("SELECT * FROM dish WHERE dish.abk = :numberABK")
     List<DishAndFavorite> getDishAndFavorite(int numberABK);
 }

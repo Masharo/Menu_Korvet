@@ -13,6 +13,7 @@ import com.example.menukorvet.pojo.FavoriteAndPrice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class FavoriteViewModel extends AndroidViewModel {
@@ -23,7 +24,7 @@ public class FavoriteViewModel extends AndroidViewModel {
     public FavoriteViewModel(@NonNull Application application) {
         super(application);
         database = MenuDatabase.getInstance(application);
-        favorites.setValue(new ArrayList<>());
+        favorites = new MutableLiveData<>(new ArrayList<>());
     }
 
     public LiveData<List<FavoriteAndPrice>> getFavorites() {
@@ -32,7 +33,11 @@ public class FavoriteViewModel extends AndroidViewModel {
 
     public void getFavorite() {
         try {
-            favorites.setValue(new GetFavoriteTask().execute().get());
+            List<FavoriteAndPrice> favoriteAndPrices = new GetFavoriteTask().execute().get();
+
+            if (Objects.nonNull(favoriteAndPrices)) {
+                favorites.setValue(favoriteAndPrices);
+            }
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }

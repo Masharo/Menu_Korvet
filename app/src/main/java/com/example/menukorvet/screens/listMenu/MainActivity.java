@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity {
 
         int length = adapter.getItemCount();
 
-        if ((Objects.isNull(menu) && length == 0) || (!isRequestDeleteAllMenu && Objects.nonNull(menu) && menu.size() == 0)) {
+        if ((length == 0) || (!isRequestDeleteAllMenu && Objects.nonNull(menu) && menu.size() == 0)) {
             notMenu.setVisibility(View.VISIBLE);
         } else {
             notMenu.setVisibility(View.INVISIBLE);
