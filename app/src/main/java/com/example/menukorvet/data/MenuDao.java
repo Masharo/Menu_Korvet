@@ -8,7 +8,6 @@ import androidx.room.Transaction;
 
 import com.example.menukorvet.pojo.Dish;
 import com.example.menukorvet.pojo.DishAndFavorite;
-import com.example.menukorvet.pojo.FavoriteAndPrice;
 import com.example.menukorvet.pojo.FavoriteDish;
 
 import java.util.List;
@@ -34,9 +33,8 @@ public interface MenuDao {
     @Delete
     void deleteFavorite(FavoriteDish favoriteDish);
 
-    @Transaction
     @Query("SELECT * FROM favorite_dish")
-    List<FavoriteAndPrice> getFavorites();
+    List<FavoriteDish> getFavorites();
 
 //    TODO
 //    @Query("SELECT * " +

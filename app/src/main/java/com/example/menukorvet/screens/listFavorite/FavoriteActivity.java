@@ -18,7 +18,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private FavoriteAdapter adapter;
     private RecyclerView favoritesUI;
     private FavoriteViewModel viewModel;
-    private LiveData<List<FavoriteAndPrice>> favoritesData;
+    private LiveData<List<FavoriteDish>> favoritesData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

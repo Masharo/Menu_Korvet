@@ -9,18 +9,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menukorvet.R;
-import com.example.menukorvet.pojo.DishAndFavorite;
 import com.example.menukorvet.pojo.FavoriteAndPrice;
+import com.example.menukorvet.pojo.FavoriteDish;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 
-    private List<FavoriteAndPrice> favorites;
+    private List<FavoriteDish> favorites;
 
-    public FavoriteAdapter(List<FavoriteAndPrice> favorites) {
+    public FavoriteAdapter(List<FavoriteDish> favorites) {
         this.favorites = favorites;
     }
 
@@ -28,23 +27,22 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         this(new ArrayList<>());
     }
 
-    public void setFavorites(List<FavoriteAndPrice> favorites) {
+    public void setFavorites(List<FavoriteDish> favorites) {
         this.favorites = favorites;
     }
 
     @NonNull
     @Override
     public FavoriteViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.favorite_item, parent, false);
         return new FavoriteViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteViewHolder holder, int position) {
-        FavoriteAndPrice favoriteAndPrice = favorites.get(position);
+        FavoriteDish favoriteDish = favorites.get(position);
 
-        holder.title.setText(favoriteAndPrice.getFavorites().get(0).getName());
-        holder.price.setText(favoriteAndPrice.getFavorites().get(0).getZena());
+        holder.title.setText(favoriteDish.getNameFavorite());
     }
 
     @Override
@@ -54,14 +52,12 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     class FavoriteViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView title,
-                         price;
+        private TextView title;
 
         public FavoriteViewHolder(@NonNull View itemView) {
             super(itemView);
 
             title = itemView.findViewById(R.id.textview_menuitem_title);
-            price = itemView.findViewById(R.id.textview_menuitem_price);
         }
     }
 }
