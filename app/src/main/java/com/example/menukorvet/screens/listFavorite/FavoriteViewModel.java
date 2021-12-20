@@ -9,7 +9,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.menukorvet.data.MenuDatabase;
-import com.example.menukorvet.pojo.FavoriteAndPrice;
 import com.example.menukorvet.pojo.FavoriteDish;
 
 import java.util.ArrayList;
@@ -24,15 +23,18 @@ public class FavoriteViewModel extends AndroidViewModel {
 
     public FavoriteViewModel(@NonNull Application application) {
         super(application);
+
         database = MenuDatabase.getInstance(application);
         favorites = new MutableLiveData<>(new ArrayList<>());
+
+        updateFavorite();
     }
 
     public LiveData<List<FavoriteDish>> getFavorites() {
         return favorites;
     }
 
-    public void getFavorite() {
+    public void updateFavorite() {
         try {
             List<FavoriteDish> favoriteDishes = new GetFavoriteTask().execute().get();
 

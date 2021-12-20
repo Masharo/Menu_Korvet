@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menukorvet.R;
-import com.example.menukorvet.pojo.FavoriteAndPrice;
 import com.example.menukorvet.pojo.FavoriteDish;
 
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
         public FavoriteViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            title = itemView.findViewById(R.id.textview_menuitem_title);
+            title = itemView.findViewById(R.id.textview_favorites_item);
         }
     }
 }

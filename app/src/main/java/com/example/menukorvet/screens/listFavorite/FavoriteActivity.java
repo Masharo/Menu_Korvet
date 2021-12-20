@@ -34,9 +34,7 @@ public class FavoriteActivity extends AppCompatActivity {
                     .getInstance(getApplication())
                     .create(FavoriteViewModel.class);
 
-        favoritesData = viewModel.getFavorites();
-
-        favoritesData.observe(this, data -> {
+        viewModel.getFavorites().observe(FavoriteActivity.this, data -> {
             adapter.setFavorites(data);
         });
     }
