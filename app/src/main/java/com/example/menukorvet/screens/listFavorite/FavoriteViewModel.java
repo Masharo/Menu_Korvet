@@ -46,11 +46,28 @@ public class FavoriteViewModel extends AndroidViewModel {
         }
     }
 
+    public void deleteFavorite(FavoriteDish favoriteDish) {
+        new DeleteItemFavoriteTask().execute(favoriteDish);
+    }
+
     private static class GetFavoriteTask extends AsyncTask<Void, Void, List<FavoriteDish>> {
 
         @Override
         protected List<FavoriteDish> doInBackground(Void... voids) {
             return database.getMenuDao().getFavorites();
+        }
+    }
+
+    private static class DeleteItemFavoriteTask extends AsyncTask<FavoriteDish, Void, Void> {
+
+        @Override
+        protected Void doInBackground(FavoriteDish... favoriteDish) {
+
+            if (Objects.nonNull(favoriteDish) && favoriteDish.length > 0) {
+                database.getMenuDao().deleteFavorite(favoriteDish[0]);
+            }
+
+            return null;
         }
     }
 }

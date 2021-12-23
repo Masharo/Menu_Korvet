@@ -17,7 +17,7 @@ public class FavoriteDish {
         this.nameFavorite = nameFavorite;
     }
 
-    public FavoriteDish() {};
+    public FavoriteDish() {}
 
     public String getNameFavorite() {
         return nameFavorite;

@@ -1,11 +1,14 @@
 package com.example.menukorvet.screens.listFavorite;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.menukorvet.R;
 import com.example.menukorvet.pojo.FavoriteAndPrice;
@@ -37,5 +40,20 @@ public class FavoriteActivity extends AppCompatActivity {
         viewModel.getFavorites().observe(FavoriteActivity.this, data -> {
             adapter.setFavorites(data);
         });
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView,
+                                  @NonNull RecyclerView.ViewHolder viewHolder,
+                                  @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        }).attachToRecyclerView(favoritesUI);
+
     }
 }
