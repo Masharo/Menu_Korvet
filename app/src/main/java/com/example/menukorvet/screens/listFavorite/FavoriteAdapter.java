@@ -1,33 +1,32 @@
 package com.example.menukorvet.screens.listFavorite;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.menukorvet.R;
 import com.example.menukorvet.pojo.FavoriteDish;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.FavoriteViewHolder> {
 
-    private List<FavoriteDish> favorites;
+    private LiveData<List<FavoriteDish>> favorites;
 
-    public FavoriteAdapter(List<FavoriteDish> favorites) {
+    @SuppressLint("NotifyDataSetChanged")
+    public FavoriteAdapter(@NonNull LifecycleOwner lifecycleOwner, @NonNull LiveData<List<FavoriteDish>> favorites) {
         this.favorites = favorites;
-    }
-
-    public FavoriteAdapter() {
-        this(new ArrayList<>());
-    }
-
-    public void setFavorites(List<FavoriteDish> favorites) {
-        this.favorites = favorites;
+        favorites.observe(lifecycleOwner, data ->
+            notifyDataSetChanged()
+        );
     }
 
     @NonNull
@@ -39,14 +38,13 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteAdapter.Favori
 
     @Override
     public void onBindViewHolder(@NonNull FavoriteViewHolder holder, int position) {
-        FavoriteDish favoriteDish = favorites.get(position);
-
+        FavoriteDish favoriteDish = favorites.getValue().get(position);
         holder.title.setText(favoriteDish.getNameFavorite());
     }
 
     @Override
     public int getItemCount() {
-        return favorites.size();
+        return Objects.nonNull(favorites.getValue()) ? favorites.getValue().size() : 0;
     }
 
     class FavoriteViewHolder extends RecyclerView.ViewHolder {

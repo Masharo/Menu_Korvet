@@ -19,28 +19,26 @@ import java.util.concurrent.ExecutionException;
 public class FavoriteViewModel extends AndroidViewModel {
 
     private static MenuDatabase database;
-    private MutableLiveData<List<FavoriteDish>> favorites;
+    private LiveData<List<FavoriteDish>> favorites;
 
     public FavoriteViewModel(@NonNull Application application) {
         super(application);
 
         database = MenuDatabase.getInstance(application);
-        favorites = new MutableLiveData<>(new ArrayList<>());
-
-        updateFavorite();
+        loadFavorite();
     }
 
     public LiveData<List<FavoriteDish>> getFavorites() {
         return favorites;
     }
 
-    public void updateFavorite() {
+    public void loadFavorite() {
         try {
-            List<FavoriteDish> favoriteDishes = new GetFavoriteTask().execute().get();
+            @NonNull
+            LiveData<List<FavoriteDish>> favoriteDishes = new GetFavoriteTask().execute().get();
 
-            if (Objects.nonNull(favoriteDishes)) {
-                favorites.setValue(favoriteDishes);
-            }
+            favorites = favoriteDishes;
+
         } catch (ExecutionException | InterruptedException e) {
             e.printStackTrace();
         }
@@ -50,10 +48,10 @@ public class FavoriteViewModel extends AndroidViewModel {
         new DeleteItemFavoriteTask().execute(favoriteDish);
     }
 
-    private static class GetFavoriteTask extends AsyncTask<Void, Void, List<FavoriteDish>> {
+    private static class GetFavoriteTask extends AsyncTask<Void, Void, LiveData<List<FavoriteDish>>> {
 
         @Override
-        protected List<FavoriteDish> doInBackground(Void... voids) {
+        protected LiveData<List<FavoriteDish>> doInBackground(Void... voids) {
             return database.getMenuDao().getFavorites();
         }
     }

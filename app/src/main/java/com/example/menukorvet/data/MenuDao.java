@@ -1,5 +1,6 @@
 package com.example.menukorvet.data;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
@@ -34,7 +35,7 @@ public interface MenuDao {
     void deleteFavorite(FavoriteDish favoriteDish);
 
     @Query("SELECT * FROM favorite_dish")
-    List<FavoriteDish> getFavorites();
+    LiveData<List<FavoriteDish>> getFavorites();
 
 //    TODO
 //    @Query("SELECT * " +
