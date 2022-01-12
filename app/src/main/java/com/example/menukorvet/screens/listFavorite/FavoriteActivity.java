@@ -1,8 +1,14 @@
 package com.example.menukorvet.screens.listFavorite;
 
+import android.annotation.SuppressLint;
+import android.app.ActionBar;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -52,5 +58,25 @@ public class FavoriteActivity extends AppCompatActivity {
                 }
             }
         }).attachToRecyclerView(favoritesUI);
+    }
+
+    @SuppressLint("ResourceType")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.favorite_menu, menu);
+        return true;
+    }
+
+    @SuppressLint("NonConstantResourceId")
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.item_menu_back:
+                this.finish();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
